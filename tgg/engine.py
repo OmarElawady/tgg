@@ -149,7 +149,10 @@ class VCS:
         fileutils.copy_contents('.tgg/current_commit', self.current_commit.get_path())
     
     def track_file(self, file_name):
-        fileutils.safe_copy(file_name, '.tgg/current_commit/' + file_name)
+        if not fileutils.exists(file_name):
+            fileutils.remove_file(file_name)
+        else:
+            fileutils.safe_copy(file_name, '.tgg/current_commit/' + file_name)
     
     #------------ logging -------------------
     def print_commits_data(self):
