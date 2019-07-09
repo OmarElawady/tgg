@@ -1,4 +1,4 @@
-gtt
+TGG
 ===
 This is a git-like package.
 
