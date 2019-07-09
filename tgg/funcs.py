@@ -72,12 +72,20 @@ def status():
     e.view_status()
 @click.command()
 @click.argument('name')
-def add(name):
+def track(name):
     e = engine.VCS()
     if not e.is_initialized():
         print("No tgg repo found")
         return
     e.track_file(name)
+@click.command()
+@click.argument('name')
+def untrack(name):
+    e = engine.VCS()
+    if not e.is_initialized():
+        print("No tgg repo found")
+        return
+    e.untrack_file(name)
 main.add_command(init)
 main.add_command(commit)
 main.add_command(merge)
@@ -86,4 +94,5 @@ main.add_command(branch)
 main.add_command(checkout)
 main.add_command(log)
 main.add_command(status)
-main.add_command(add)
+main.add_command(track)
+main.add_command(untrack)

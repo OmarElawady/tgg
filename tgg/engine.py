@@ -153,7 +153,12 @@ class VCS:
             fileutils.remove_file('.tgg/current_commit/' + file_name)
         else:
             fileutils.safe_copy(file_name, '.tgg/current_commit/' + file_name)
-    
+   
+    def untrack_file(self, file_name):
+       if fileutils.exists('.tgg/current_commit/' + file_name):
+           fileutils.remove_file('.tgg/current_commit/' + file_name)
+       else:
+            print(file_name + " is not tracked")
     #------------ logging -------------------
     def print_commits_data(self):
         print(json.dumps(self.commits_data.get_json_data(), indent = 4))
