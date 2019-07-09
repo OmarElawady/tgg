@@ -29,3 +29,12 @@ Restore a commit:
 
 ```tgg revert -c commit_id```
 
+
+Installation
+============
+
+It can be installed in a pip virtual environment using the command:
+
+```pipenv -e .```
+
+After that, it can be used by executing ```pipenv shell``` and running tgg commands.
