@@ -110,6 +110,7 @@ class VCS:
         fileutils.write_to_json_file('.tgg/commits', {"0": {"parent":"0" ,"message":""}})
         fileutils.write_to_json_file('.tgg/branches', {"master": '0'})
         fileutils.write_to_file('.tgg/current_branch', 'master') 
+        fileutils.create_dir('.tgg/current_commit')
         self.assign_attrs()
     def is_initialized(self):
         return fileutils.exists('.tgg')
@@ -132,9 +133,10 @@ class VCS:
     #------------- commits --------------------
     def load_commit(self, commit):
         self.current_commit = commit
-        fileutils.clear_dir_but_dir('.', '.tgg')
+        #fileutils.clear_dir_but_dir('.', '.tgg') #comment to keep untracked files
         fileutils.copy_contents(self.current_commit.get_path(), '.')
-   
+        fileutils.copy_contents(self.current_commit.get_path(), '.tgg/current_commit')
+
     def load_commit_by_id(self, commit_id):
        self.load_commit(self.commits_data.get_commit_by_id(commit_id))
     
@@ -144,8 +146,11 @@ class VCS:
         self.current_commit = Commit(commit_id, parent, message)
         self.commits_data.add_commit(self.current_commit)
         fileutils.create_dir(self.current_commit.get_path())
-        fileutils.copy_contents_but_dir('.', self.current_commit.get_path(), '.tgg')
-
+        fileutils.copy_contents('.tgg/current_commit', self.current_commit.get_path())
+    
+    def track_file(self, file_name):
+        fileutils.safe_copy(file_name, '.tgg/current_commit/' + file_name)
+    
     #------------ logging -------------------
     def print_commits_data(self):
         print(json.dumps(self.commits_data.get_json_data(), indent = 4))
@@ -198,9 +203,31 @@ class VCS:
     @commits_data.setter
     def commits_data(self, data):
         self._commits_data = data
-    
+   
+    #--------------- status ------------------
+    def view_status(self):
+        working_dir_files = fileutils.set_of_files('.', '.tgg')
+        current_commit_files = fileutils.set_of_files('.tgg/current_commit')
+        AdiffB = working_dir_files.difference(current_commit_files)
+        BdiffA = current_commit_files.difference(working_dir_files)
+        inter  = working_dir_files.intersection(current_commit_files)
+        if len(AdiffB) != 0:
+            print("Added files: ")
+            for el in AdiffB:
+                print(el)
+        if len(BdiffA) != 0:
+            print("Deleted files: ")
+            for el in BdiffA:
+                print(el)
+        diff = set(filter(lambda name: not fileutils.is_same_content('.tgg/current_commit/' + name, name), inter))
+        if len(diff):
+            print("Modified files: ")
+            for el in diff:
+                print(el)
+
     #--------------- destructor ----------------
     def __del__(self):
-        fileutils.write_to_json_file('.tgg/commits', self.commits_data.get_json_data())
-        fileutils.write_to_json_file('.tgg/branches', self.branches_data.get_json_data())
-        fileutils.write_to_file('.tgg/current_branch', self.current_branch.get_name())
+        if self.is_initialized():
+            fileutils.write_to_json_file('.tgg/commits', self.commits_data.get_json_data())
+            fileutils.write_to_json_file('.tgg/branches', self.branches_data.get_json_data())
+            fileutils.write_to_file('.tgg/current_branch', self.current_branch.get_name())
