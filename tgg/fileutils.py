@@ -67,3 +67,23 @@ def copy_contents_but_dir(source, dest, exclude):
             shutil.copytree(s, d)
         else:
             shutil.copy(s, d)
+
+
+def is_same_content(path1, path2):
+    return read_file(path1) == read_file(path2)
+
+def set_of_files(d, exclude = ""):
+    s = set()
+    prefix = len(d) + 1 
+    for root, dirs, files in os.walk(d):
+        if root == d and exclude in dirs:
+            del dirs[dirs.index(exclude)]
+        for f in files:
+            s.add(os.path.join(root, f)[prefix:])
+    return s
+
+def safe_copy(source, dest):
+    directory_name = dest[dest.rfind('/') + 1:]
+    if not exists(directory_name):
+        os.makedirs(directory_name)
+    shutil.copyfile(source, dest)
