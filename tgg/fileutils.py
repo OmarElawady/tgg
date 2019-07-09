@@ -25,15 +25,20 @@ def read_file(name):
     data = fd.read()
     fd.close()
     return data
+
 def write_to_file(name, data):
     fd = open(name, 'w+')
     fd.write(data)
     fd.close()
+
 def read_json_file(name):
     return json.loads(read_file(name))
 
 def write_to_json_file(name, obj):
     return write_to_file(name, json.dumps(obj))
+
+def remove_file(name):
+    os.remove(name)
 
 def hash_dir(d):
     return str(randrange(100000000))
