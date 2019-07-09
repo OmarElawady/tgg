@@ -29,6 +29,13 @@ Restore a commit:
 
 ```tgg revert -c commit_id```
 
+Track a file:
+
+```tgg track file_name```
+
+Untrack a file:
+
+```tgg untrack file_name```
 
 Installation
 ============
