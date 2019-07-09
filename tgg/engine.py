@@ -150,7 +150,7 @@ class VCS:
     
     def track_file(self, file_name):
         if not fileutils.exists(file_name):
-            fileutils.remove_file(file_name)
+            fileutils.remove_file('.tgg/current_commit/' + file_name)
         else:
             fileutils.safe_copy(file_name, '.tgg/current_commit/' + file_name)
     
