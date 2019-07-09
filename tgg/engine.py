@@ -222,16 +222,16 @@ class VCS:
         if len(AdiffB) != 0:
             print("Added files: ")
             for el in AdiffB:
-                print(el)
+                print('\t' + el)
         if len(BdiffA) != 0:
             print("Deleted files: ")
             for el in BdiffA:
-                print(el)
+                print('\t' + el)
         diff = set(filter(lambda name: not fileutils.is_same_content('.tgg/current_commit/' + name, name), inter))
         if len(diff):
             print("Modified files: ")
             for el in diff:
-                print(el)
+                print('\t' + el)
 
     #--------------- destructor ----------------
     def __del__(self):
